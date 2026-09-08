@@ -33,8 +33,13 @@ The `advisory_agent` package provides the first deterministic implementation of 
 
 ### Run locally
 
+Create and activate a virtual environment, then install the project and its test dependency:
+
 ```powershell
-python -m pip install -e ".[test]"
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 python -m pytest
 portfolio-advisor --risk moderate --holding US_EQ:equities:7000 --holding BOND:bonds:3000 --monthly-contribution 250 --years 5 --annual-return 0.06
 ```
