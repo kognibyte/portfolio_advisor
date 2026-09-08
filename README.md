@@ -20,3 +20,23 @@ Generates investment and rebalancing suggestions grounded in the RAG knowledge l
 
 QA Agent -<br/>
 The compliance and suitability gate — checks every recommendation before it reaches the user, and can send it back for revision
+
+## Advisory Agent implementation
+
+The `advisory_agent` package provides the first deterministic implementation of the Advisory Agent. It includes:
+
+- Risk-profile target allocations for conservative, moderate, and aggressive investors
+- Dollar-based rebalancing recommendations from current holdings
+- Local RAG retrieval with source citations from `data/knowledge/`
+- What-if projections using monthly contributions and an assumed annual return
+- A JSON CLI suitable for later use by a supervisor agent or API
+
+### Run locally
+
+```powershell
+python -m pip install -e ".[test]"
+python -m pytest
+portfolio-advisor --risk moderate --holding US_EQ:equities:7000 --holding BOND:bonds:3000 --monthly-contribution 250 --years 5 --annual-return 0.06
+```
+
+The projections are illustrative only and ignore fees, taxes, inflation, withdrawals, and changing returns. They are not financial advice or a guarantee of performance.
