@@ -1,0 +1,11 @@
+{
+  "investor_id": "DEMO-001",
+  "financial_goal": "Retirement",
+  "target_amount": 20000000,
+  "investment_horizon_years": 20,
+  "risk_appetite": "Medium",
+  "loss_tolerance_percent": 20,
+  "liquidity_need": "Medium",
+  "investment_experience": "Medium",
+  "income_stability": "High"
+}

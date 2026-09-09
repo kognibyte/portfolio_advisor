@@ -1,0 +1,77 @@
+{
+  "investor": {
+    "investor_id": "DEMO-001",
+    "financial_goal": "Retirement",
+    "target_amount": 20000000.0,
+    "investment_horizon_years": 20,
+    "risk_appetite": "Medium",
+    "loss_tolerance_percent": 20.0,
+    "liquidity_need": "Low",
+    "investment_experience": "High",
+    "income_stability": "Low"
+  },
+  "portfolio_analytics": {
+    "total_value": 1000000,
+    "asset_allocation": {
+      "Equity": 75.0,
+      "Fixed Income": 15.0,
+      "Gold": 5.0,
+      "Cash": 5.0
+    },
+    "annualised_volatility": 24.5,
+    "largest_holding_weight": 30.0,
+    "largest_sector_weight": 48.0
+  },
+  "risk_assessment": {
+    "risk_score": 70.7,
+    "risk_profile": "Aggressive",
+    "portfolio_risk_level": "Aggressive",
+    "alignment_status": "Aligned",
+    "alignment_reason": "The portfolio risk level matches the investor risk profile.",
+    "score_breakdown": [
+      {
+        "component": "Investment horizon",
+        "score": 90.0,
+        "weight": 0.25,
+        "weighted_score": 22.5,
+        "reason": "Investment horizon is 20 years."
+      },
+      {
+        "component": "Risk appetite",
+        "score": 60.0,
+        "weight": 0.25,
+        "weighted_score": 15.0,
+        "reason": "Stated risk appetite is Medium."
+      },
+      {
+        "component": "Loss tolerance",
+        "score": 70.0,
+        "weight": 0.2,
+        "weighted_score": 14.0,
+        "reason": "Maximum acceptable temporary loss is 20.0%."
+      },
+      {
+        "component": "Financial capacity",
+        "score": 51.0,
+        "weight": 0.2,
+        "weighted_score": 10.2,
+        "reason": "Income stability is Low and liquidity need is Low."
+      },
+      {
+        "component": "Investment experience",
+        "score": 90.0,
+        "weight": 0.1,
+        "weighted_score": 9.0,
+        "reason": "Investment experience is High."
+      }
+    ],
+    "warnings": [
+      "A single holding represents more than 25% of the portfolio.",
+      "A single sector represents more than 40% of the portfolio."
+    ],
+    "summary": "This educational assessment shows a risk score of 70.7, indicating an aggressive risk profile that matches the portfolio's aggressive risk level. This alignment suggests that the portfolio is suitable for an investor willing to take on higher risks. However, there are important warnings to consider: one holding makes up over 25% of the portfolio, and a single sector exceeds 40%. These factors may increase volatility and exposure, so it's crucial to monitor them closely for balanced risk management.",
+    "disclaimer": "This risk assessment is provided for educational and informational purposes only. It is based on the information provided by the user and simplified portfolio-risk rules. It does not constitute investment, financial, legal or tax advice. Investment values can rise or fall, and projected outcomes are not guaranteed. Consult a qualified financial adviser before making investment decisions.",
+    "agent_name": "Risk Agent",
+    "status": "success"
+  }
+}

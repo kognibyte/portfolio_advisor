@@ -1,0 +1,13 @@
+{
+  "total_value": 1000000,
+  "asset_allocation": {
+    "Equity": 75,
+    "Fixed Income": 15,
+    "Gold": 5,
+    "Cash": 5
+  },
+  "annualised_volatility": 24.5,
+  "sharpe_ratio": 1.15,
+  "largest_holding_weight": 30,
+  "largest_sector_weight": 48
+}
