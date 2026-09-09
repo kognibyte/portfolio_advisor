@@ -23,13 +23,17 @@ The compliance and suitability gate — checks every recommendation before it re
 
 ## Advisory Agent implementation
 
-The `advisory_agent` package provides the first deterministic implementation of the Advisory Agent. It includes:
+The project now uses a role-based workflow. `PortfolioAdvisorOrchestrator` coordinates Data, Risk, Advisory, and QA agents while reusable services keep calculations deterministic. It includes:
 
 - Risk-profile target allocations for conservative, moderate, and aggressive investors
 - Dollar-based rebalancing recommendations from current holdings
 - Local RAG retrieval with source citations from `data/knowledge/`
 - What-if projections using monthly contributions and an assumed annual return
 - A JSON CLI suitable for later use by a supervisor agent or API
+- OpenAI narration through `OPENAI_API_KEY` and `gpt-4o-mini`, with an offline fallback
+- Market-price enrichment through optional yFinance integration
+- Market downturn, rate hike, and inflation spike stress tests
+- A Streamlit dashboard with scenario charts
 
 ### Run locally
 
@@ -44,4 +48,27 @@ python -m pytest
 portfolio-advisor --risk moderate --holding US_EQ:equities:7000 --holding BOND:bonds:3000 --monthly-contribution 250 --years 5 --annual-return 0.06
 ```
 
+The CLI now runs the full workflow and returns analytics, risk assessment, allocation recommendations, stress scenarios, retrieved sources, narrative model status, and QA checks.
+
 The projections are illustrative only and ignore fees, taxes, inflation, withdrawals, and changing returns. They are not financial advice or a guarantee of performance.
+
+### Run the dashboard
+
+```powershell
+copy .env.example .env
+streamlit run main.py
+```
+
+Add a real `OPENAI_API_KEY` to `.env` to enable the grounded narrative. The calculation, scenario, citation, and QA layers remain usable without a key.
+
+Set `ENABLE_LIVE_MARKET_DATA=1` to enable yFinance enrichment for real ticker symbols. It is disabled by default for deterministic demos and tests.
+
+### Project structure
+
+```text
+agents/       Data, Risk, Advisory, QA, and workflow orchestration
+services/     Analytics, risk scoring, scenarios, market data, and OpenAI adapter
+data/         Knowledge documents and future portfolio/profile inputs
+reports/      JSON and Markdown report renderers
+main.py       Streamlit dashboard
+```

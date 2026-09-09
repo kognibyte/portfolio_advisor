@@ -2,8 +2,8 @@ import argparse
 import json
 from dataclasses import asdict
 
-from .advisor import AdvisoryAgent
 from .models import AssetClass, Holding, Portfolio, RiskProfile, SimulationRequest
+from agents.orchestrator import PortfolioAdvisorOrchestrator
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -31,12 +31,12 @@ def parse_holding(value: str) -> Holding:
 def main() -> None:
     args = build_parser().parse_args()
     portfolio = Portfolio(tuple(parse_holding(value) for value in args.holding))
-    report = AdvisoryAgent().advise(
+    workflow = PortfolioAdvisorOrchestrator().run(
         portfolio,
         RiskProfile(args.risk),
         SimulationRequest(args.monthly_contribution, args.years, args.annual_return),
     )
-    print(json.dumps(asdict(report), default=lambda item: item.value if hasattr(item, "value") else item, indent=2))
+    print(json.dumps(asdict(workflow), default=lambda item: item.value if hasattr(item, "value") else item, indent=2))
 
 
 if __name__ == "__main__":
