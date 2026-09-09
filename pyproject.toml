@@ -22,7 +22,7 @@ full = ["portfolio-advisor-agent[test,ai,market,ui]"]
 portfolio-advisor = "advisory_agent.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["advisory_agent*"]
+include = ["advisory_agent*", "agents*", "services*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
