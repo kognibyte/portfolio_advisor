@@ -1,22 +1,47 @@
-# Portfolio Advisor
-Personalize Portfolio Advisor with What-if Simulation
+# Personalized Portfolio Advisor with What-If Simulation
 
-• Create a goal-based advisory agent where users enter financial goals, risk appetite, and current holdings, and receive a suggested allocation. The agent should stress-test the portfolio against scenarios (rate hike, market downturn, inflation), visualize projected outcomes in charts, and suggest rebalancing steps.<br/>
-• Suitability disclaimers must be included. Bonus: multi-agent roles (risk profiler, allocator, simulator).<br/>
-• Objective: Deliver personalized, scenario-tested investment guidance with clear risk communication.<br/>
-• Learning takeaways: Goal-based financial planning logic, Monte Carlo / scenario simulation, data visualization, risk profiling, and embedding responsible-advice guardrails and disclaimers.<br/>
+This project implements a simple goal-based portfolio analysis agent using Streamlit and FastAPI.
 
-Data Agent -<br/>
-Ingests the portfolio CSV, fetches live prices via yfinance and news headlines per ticker; outputs a clean, structured dataset for everything downstream.
+## Goal
+The analysis agent reads a financial goal, investor risk responses, and current holdings,
+then computes portfolio analytics such as expected return, Sharpe ratio, asset-class allocation,
+sector allocation, concentration, and scenario-based recommendations.
 
-Analysis Agent -<br/>
-Computes portfolio metrics — returns, Sharpe ratio, sector allocation, concentration — and produces the analytics report the advisory chain reasons from
+## Run
 
-Risk Agent -<br/>
-Scores the investor's risk profile (conservative / moderate / aggressive) and evaluates whether current holdings match that tolerance
+1. Install dependencies:
+   pip install -r requirements.txt
 
-Advisory Agent -<br/>
-Generates investment and rebalancing suggestions grounded in the RAG knowledge layer, tailored to the risk profile
+2. Start the FastAPI backend:
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
-QA Agent -<br/>
-The compliance and suitability gate — checks every recommendation before it reaches the user, and can send it back for revision
+3. Start a Streamlit front end:
+   streamlit run streamlit_app.py
+
+3. Run the test cases:
+   python -m pytest -q
+
+## API
+
+POST /agent
+{
+  "goal": {
+    "name": "House down payment",
+    "target_amount": 3000000,
+    "time_horizon_years": 7,
+    "monthly_contribution": 25000
+  },
+  "risk_responses": {
+    "loss_tolerance_percent": 15,
+    "income_stability": "stable",
+    "investment_experience": "intermediate",
+    "liquidity_need": "medium"
+  },
+  "holdings": [
+    {"symbol": "ASSET_A", "quantity": 100, "purchase_price": 120}
+  ],
+  "scenario": "base"
+}
+
+## Notes
+This project intentionally avoids LangSmith and LangChain libraries and keeps the code simple and clean.
