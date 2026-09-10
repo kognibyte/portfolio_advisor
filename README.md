@@ -1,6 +1,17 @@
 # Personalized Portfolio Advisor with What-If Simulation
 
-This project implements a simple goal-based portfolio analysis agent using Streamlit and FastAPI.
+This project follows a modular service-oriented structure for a clean separation between API endpoints,
+portfolio logic, report generation, and model contracts.
+
+## Structure
+
+- app/api: FastAPI routes and application wiring
+- app/services: orchestration and business service layer
+- app/agents: portfolio evaluation logic and AI-assisted analysis
+- app/reporting: analytics report builder
+- app/models: request/response schemas
+- data: portfolio metadata and scenario defaults
+- tests: automated regression checks
 
 ## Goal
 The analysis agent reads a financial goal, investor risk responses, and current holdings,
@@ -18,7 +29,7 @@ sector allocation, concentration, and scenario-based recommendations.
 3. Start a Streamlit front end:
    streamlit run streamlit_app.py
 
-3. Run the test cases:
+4. Run the test cases:
    python -m pytest -q
 
 ## API
