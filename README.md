@@ -49,7 +49,13 @@ POST /agent
     "liquidity_need": "medium"
   },
   "holdings": [
-    {"symbol": "ASSET_A", "quantity": 100, "purchase_price": 120}
+    {
+      "symbol": "ASSET_A",
+      "quantity": 100,
+      "current_price": 120,
+      "purchase_price": 120,
+      "history": [100, 101, 102, 103]
+    }
   ],
   "scenario": "base"
 }

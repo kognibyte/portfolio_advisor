@@ -4,6 +4,7 @@ import statistics
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from dotenv import load_dotenv
 from fastapi import HTTPException
 from openai import OpenAI
 
@@ -15,6 +16,7 @@ DATA_FILE = Path(__file__).resolve().parents[2] / "data" / "portfolio_training_d
 
 class PortfolioAnalysisAgent:
     def __init__(self, data_file: Path = DATA_FILE):
+        load_dotenv(Path(__file__).resolve().parents[2] / ".env")
         self.data = self._load_data(data_file)
         self.training = self.data.get("training_data", [])
         self.rules = self.data.get("rules", {})
@@ -100,6 +102,8 @@ class PortfolioAnalysisAgent:
             disclaimer=self.disclaimer,
             scenarios=self.scenarios,
         )
+
+        recommendations = self._generate_ai_recommendations_if_possible(request, analytics_report, recommendations)
 
         analysis = self._build_local_analysis(request, annualized_return, annualized_volatility, sharpe_ratio)
         analysis = self._generate_ai_analysis_if_possible(request, analytics_report, analysis)
@@ -195,6 +199,40 @@ class PortfolioAnalysisAgent:
             f"The portfolio is projected to return {annualized_return:.2%} annually with "
             f"volatility {annualized_volatility:.2%} and Sharpe ratio {sharpe_ratio:.2f}."
         )
+
+    def _generate_ai_recommendations_if_possible(self, request: AgentRequest, analytics_report: Dict[str, Any], fallback_recommendations: List[str]) -> List[str]:
+        if not self.openai_client:
+            return fallback_recommendations
+
+        try:
+            prompt = {
+                "goal": request.goal.model_dump(),
+                "risk_responses": request.risk_responses.model_dump(),
+                "scenario": request.scenario,
+                "summary": analytics_report,
+                "fallback_recommendations": fallback_recommendations,
+            }
+            response = self.openai_client.chat.completions.create(
+                model="gpt-4o-mini",
+                temperature=0.2,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a concise portfolio advisory assistant. Return exactly a JSON array of 3 or 4 short recommendation strings in plain text. Do not give regulated investment advice. Always respond with valid JSON only.",
+                    },
+                    {"role": "user", "content": json.dumps(prompt, indent=2)},
+                ],
+            )
+            text = response.choices[0].message.content.strip()
+            try:
+                parsed = json.loads(text)
+                if isinstance(parsed, list) and all(isinstance(item, str) for item in parsed):
+                    return parsed[:4]
+            except Exception:
+                pass
+            return fallback_recommendations
+        except Exception:
+            return fallback_recommendations
 
     def _generate_ai_analysis_if_possible(self, request: AgentRequest, analytics_report: Dict[str, Any], fallback_text: str) -> str:
         if not self.openai_client:
