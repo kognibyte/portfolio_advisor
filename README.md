@@ -60,5 +60,34 @@ POST /agent
   "scenario": "base"
 }
 
+## Mermaid Flow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Streamlit as Streamlit UI
+    participant FastAPI as FastAPI /agent
+    participant Service as PortfolioService
+    participant Agent as PortfolioAnalysisAgent
+    participant Report as PortfolioReportBuilder
+    participant OpenAI as OpenAI (optional)
+    participant Data as training_data.json
+
+    User->>Streamlit: Enter goal, risk, holdings
+    Streamlit->>FastAPI: POST /agent with AgentRequest JSON
+    FastAPI->>Service: evaluate(request)
+    Service->>Agent: evaluate(request)
+    Agent->>Data: load symbol metadata and rules
+    Agent->>Agent: validate holdings and prices
+    Agent->>Agent: compute weights, allocations, metrics
+    Agent->>Report: build analytics_report
+    Agent->>OpenAI: generate recommendations (optional)
+    OpenAI-->>Agent: recommendation JSON or failure
+    Agent-->>Service: AgentResponse
+    Service-->>FastAPI: AgentResponse
+    FastAPI-->>Streamlit: JSON metrics, analysis, recommendations, report
+    Streamlit-->>User: Display charts and recommendations
+```
+
 ## Notes
 This project intentionally avoids LangSmith and LangChain libraries and keeps the code simple and clean.
