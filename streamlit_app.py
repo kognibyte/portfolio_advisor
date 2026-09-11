@@ -11,8 +11,8 @@ st.caption("Goal-based what-if simulation and analysis agent")
 # Keep a simple default holdings list in session state
 if "holdings" not in st.session_state:
     st.session_state.holdings = [
-        {"symbol": "ASSET_A", "quantity": 100.0, "purchase_price": 120.0},
-        {"symbol": "ASSET_B", "quantity": 50.0, "purchase_price": 80.0},
+        {"symbol": "ASSET_A", "quantity": 100.0, "current_price": 120.0, "purchase_price": 120.0, "history": [100.0, 101.0, 102.0, 103.0]},
+        {"symbol": "ASSET_B", "quantity": 50.0, "current_price": 80.0, "purchase_price": 80.0, "history": [80.0, 81.0, 82.0, 83.0]},
     ]
 
 with st.sidebar:
@@ -31,17 +31,33 @@ with st.sidebar:
     st.subheader("Holdings")
     rows = []
     for idx, row in enumerate(st.session_state.holdings):
-        cols = st.columns(3)
+        cols = st.columns(5)
         with cols[0]:
             symbol = st.text_input(f"Symbol {idx+1}", value=row.get("symbol", ""), key=f"symbol_{idx}")
         with cols[1]:
             quantity = st.number_input(f"Quantity {idx+1}", min_value=0.0, value=float(row.get("quantity", 0.0)), key=f"quantity_{idx}")
         with cols[2]:
-            purchase_price = st.number_input(f"Purchase price {idx+1}", min_value=0.0, value=float(row.get("purchase_price", 0.0)), key=f"price_{idx}")
-        rows.append({"symbol": symbol, "quantity": quantity, "purchase_price": purchase_price})
+            current_price = st.number_input(f"Current price {idx+1}", min_value=0.0, value=float(row.get("current_price", row.get("purchase_price", 0.0))), key=f"current_price_{idx}")
+        with cols[3]:
+            purchase_price = st.number_input(f"Purchase price {idx+1}", min_value=0.0, value=float(row.get("purchase_price", row.get("current_price", 0.0))), key=f"price_{idx}")
+        with cols[4]:
+            history_text = st.text_input(f"History {idx+1}", value=", ".join(str(x) for x in row.get("history", [])) or "", key=f"history_{idx}")
+        history = []
+        if history_text.strip():
+            try:
+                history = [float(x.strip()) for x in history_text.split(",") if x.strip()]
+            except ValueError:
+                history = []
+        rows.append({
+            "symbol": symbol,
+            "quantity": quantity,
+            "current_price": current_price,
+            "purchase_price": purchase_price,
+            "history": history,
+        })
 
     if st.button("Add Holding"):
-        st.session_state.holdings.append({"symbol": "ASSET_X", "quantity": 10.0, "purchase_price": 100.0})
+        st.session_state.holdings.append({"symbol": "ASSET_X", "quantity": 10.0, "current_price": 100.0, "purchase_price": 100.0, "history": [100.0, 101.0, 102.0]})
 
     if st.button("Remove Last Holding") and len(st.session_state.holdings) > 1:
         st.session_state.holdings.pop()
@@ -64,7 +80,16 @@ if st.button("Analyze Portfolio"):
             "investment_experience": investment_experience,
             "liquidity_need": liquidity_need,
         },
-        "holdings": st.session_state.holdings,
+        "holdings": [
+            {
+                "symbol": row["symbol"],
+                "quantity": float(row["quantity"]),
+                "current_price": float(row["current_price"]),
+                "purchase_price": float(row["purchase_price"]),
+                "history": row.get("history", []),
+            }
+            for row in st.session_state.holdings
+        ],
         "scenario": scenario,
     }
     try:

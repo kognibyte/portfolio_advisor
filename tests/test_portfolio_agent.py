@@ -53,6 +53,13 @@ def test_analysis_agent_returns_expected_response_shape():
     assert "analytics_report" in body
 
 
+def test_streamlit_ui_form_includes_current_price_and_history_fields():
+    streamlit_source = Path(__file__).resolve().parents[1] / "streamlit_app.py"
+    text = streamlit_source.read_text(encoding="utf-8")
+    assert "current_price" in text
+    assert "history" in text
+
+
 def test_agent_class_simple_prediction():
     agent = PortfolioAnalysisAgent()
     payload = AgentRequest(
